@@ -1,0 +1,3 @@
+{$DOMAIN} {
+	reverse_proxy bark:8080
+}

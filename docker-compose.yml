@@ -1,0 +1,29 @@
+services:
+  bark:
+    image: finab/bark-server:latest
+    container_name: bark
+    restart: unless-stopped
+    expose:
+      - "8080"
+    volumes:
+      - ./bark-data:/data
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: bark-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - bark
+
+volumes:
+  caddy-data:
+  caddy-config:
