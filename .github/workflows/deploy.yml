@@ -8,10 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Ship compose files to the host
+        if: env.DEPLOY_HOST != ''
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -22,6 +25,7 @@ jobs:
           target: "~/bark-selfhost"
 
       - name: (Re)start the stack
+        if: env.DEPLOY_HOST != ''
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DEPLOY_HOST }}
